@@ -5,20 +5,38 @@ let maplocalleader = "\\"
 " Display line number
 set number
 
-" FileType Autocmd
-" FileType C
+"statusline settings ----------- {{{
+set statusline=%f	" filename
+set statusline+=%=	" Switc to the right side
+set statusline+=%l	" Current line
+set statusline+=/	" Separator
+set statusline+=%L	" Total lines
+" }}}
+
+" FileType-Specific Settings
+" Vimscript file settings ----------------- {{{
+augroup filetype_vim
+	autocmd!
+	" set folding
+	autocmd FileType vim setlocal foldmethod=marker
+augroup END
+" }}}
+
+" C files settings ----------------- {{{
 augroup filetype_c
 	autocmd!
 	autocmd FileType c nnoremap <buffer> <localleader>c I//
 	autocmd FileType c iabbrev <buffer> iff if ()<left>
 augroup END
+" }}}
 
-" FileType .md
+" Markdown files settings ----------------{{{
 augroup filetype_markdown
 	autocmd!
 	autocmd BufNewFile,BufRead *.md :onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
 	autocmd BufNewFile,BufRead *.md :onoremap ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
 augroup End
+" }}}
 
 " Edit and Sourcing .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
