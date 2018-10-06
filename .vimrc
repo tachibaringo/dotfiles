@@ -13,6 +13,13 @@ augroup filetype_c
 	autocmd FileType c iabbrev <buffer> iff if ()<left>
 augroup END
 
+" FileType .md
+augroup filetype_markdown
+	autocmd!
+	autocmd BufNewFile,BufRead *.md :onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+	autocmd BufNewFile,BufRead *.md :onoremap ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+augroup End
+
 " Edit and Sourcing .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -43,6 +50,11 @@ inoremap <leader>' <esc>viw<esc>a'<esc>bi'<esc>leli
 " visual mode
 vnoremap <leader>" <esc>`<i"<esc>`>a"<esc>gv
 vnoremap <leader>' <esc>`<i'<esc>`>a'<esc>gv
+
+" Operator pending mappings
+" around next or last parentheses
+onoremap in( :<c-u>normal! f(vi(<cr>
+onoremap il( :<c-u>normal! F(vi(<cr>
 
 " Abbreviations
 iabbrev #i include
