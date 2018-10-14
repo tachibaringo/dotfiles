@@ -1,68 +1,78 @@
-" Basic settings
-set number
-set shiftwidth=4
-set laststatus=2
-
-" Mapleader
+" Set mapleader and maplocalleader
 let mapleader = "-"
 let maplocalleader = "\\"
 
-" KeyMappings
-" open or read .vimrc
-:nnoremap <leader>ev :tabedit $MYVIMRC<cr>
-:nnoremap <leader>sv :source $MYVIMRC<cr>
+" Display line number
+set number
 
-" jk equal Esc 
-:inoremap jk <esc>
-:inoremap <esc> <nop>
-:vnoremap jk <esc>
-:vnoremap <esc> <nop>
+"statusline settings ----------- {{{
+set statusline=%f	" filename
+set statusline+=%=	" Switc to the right side
+set statusline+=%l	" Current line
+set statusline+=/	" Separator
+set statusline+=%L	" Total lines
+" }}}
 
-" grep
-" nnoremap <leader>g :execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
-
-" Toggling
-nnoremap <leader>f :call FoldColumnToggle()<cr>
-
-function! FoldColumnToggle()
-	if &foldcolumn
-		setlocal foldcolumn=0
-	else
-		setlocal foldcolumn=4
-	endif
-endfunction
-
-" QuickFixToggle
-nnoremap <leader>q :call QuickfixToggle()<cr>
-
-let g:quickfix_is_open = 0
-
-function! QuickfixToggle()
-	if g:quickfix_is_open
-		cclose
-		let g:quickfix_is_open = 0
-	else
-		copen
-		let g:quickfix_is_open = 1
-	endif
-endfunction
-
-" Vimscript file settings ------------------- {{{
+" FileType-Specific Settings
+" Vimscript file settings ----------------- {{{
 augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-augroup end
+	autocmd!
+	" set folding
+	autocmd FileType vim setlocal foldmethod=marker
+augroup END
 " }}}
 
-" FileType-specific settings ------------------- {{{
-augroup filetype_html
-    autocmd!
-"    autocmd BufWritePre *.html :normal gg=G
-    autocmd BufNewFile,BufRead *.html setlocal nowrap
-augroup end
-
+" C files settings ----------------- {{{
 augroup filetype_c
-    autocmd!
-    autocmd FileType c,cpp nnoremap <buffer> <localleader>c I//<esc>
-augroup end
+	autocmd!
+	autocmd FileType c nnoremap <buffer> <localleader>c I//
+	autocmd FileType c iabbrev <buffer> iff if ()<left>
+augroup END
 " }}}
+
+" Markdown files settings ----------------{{{
+augroup filetype_markdown
+	autocmd!
+	autocmd BufNewFile,BufRead *.md :onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+	autocmd BufNewFile,BufRead *.md :onoremap ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+augroup End
+" }}}
+
+" Edit and Sourcing .vimrc
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" Return normal mode
+inoremap jk <esc>
+vnoremap jk <esc>
+
+" Make space more useful
+nnoremap <leader><space> za
+
+" - is down a line
+" _ is up a line
+nnoremap <leader>- ddp
+nnoremap <leader>_ ddkP
+
+" <c-u> Upper
+inoremap <leader><c-u> <esc>viwUi
+nnoremap <leader><c-u> viwU
+
+" Surround a word in X
+" Normal mode
+nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
+nnoremap <leader>' viw<esc>a'<esc>bi'<esc>lel
+" insert mode
+inoremap <leader>" <esc>viw<esc>a"<esc>bi"<esc>leli
+inoremap <leader>' <esc>viw<esc>a'<esc>bi'<esc>leli
+" visual mode
+vnoremap <leader>" <esc>`<i"<esc>`>a"<esc>gv
+vnoremap <leader>' <esc>`<i'<esc>`>a'<esc>gv
+
+" Operator pending mappings
+" around next or last parentheses
+onoremap in( :<c-u>normal! f(vi(<cr>
+onoremap il( :<c-u>normal! F(vi(<cr>
+
+" Abbreviations
+iabbrev #i include
